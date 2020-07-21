@@ -26,9 +26,22 @@ const styles = (theme) => ({
 });
 
 class App extends Component {
-  state = {
-    customers: "",
-    completed: 0,
+  constructor(props) {
+    super(props);
+    this.state = {
+      customers: "",
+      completed: 0,
+    };
+  }
+
+  stateRefresh = () => {
+    this.setState({
+      customers: "",
+      completed: 0,
+    });
+    this.callApi()
+      .then((res) => this.setState({ customers: res }))
+      .catch((err) => console.log(err));
   };
 
   componentDidMount() {
@@ -60,18 +73,22 @@ class App extends Component {
         <Paper className={classes.root}>
           <Table className={classes.table}>
             <TableHead>
-              <TableCell>번호</TableCell>
-              <TableCell>이미지</TableCell>
-              <TableCell>이름</TableCell>
-              <TableCell>생년월일</TableCell>
-              <TableCell>성별</TableCell>
-              <TableCell>직업</TableCell>
+              <TableRow>
+                <TableCell>번호</TableCell>
+                <TableCell>이미지</TableCell>
+                <TableCell>이름</TableCell>
+                <TableCell>생년월일</TableCell>
+                <TableCell>성별</TableCell>
+                <TableCell>직업</TableCell>
+                <TableCell>설정</TableCell>
+              </TableRow>
             </TableHead>
             <TableBody>
               {this.state.customers ? (
                 this.state.customers.map((c) => {
                   return (
                     <Customer
+                      stateRefresh={this.stateRefresh}
                       key={c.id}
                       id={c.id}
                       image={c.image}
@@ -96,7 +113,7 @@ class App extends Component {
             </TableBody>
           </Table>
         </Paper>
-        <CustomerAdd />
+        <CustomerAdd stateRefresh={this.stateRefresh} />
       </div>
     );
   }
