@@ -141,7 +141,7 @@ class App extends Component {
   }
 
   callApi = async () => {
-    const response = await fetch("/api/customers");
+    const response = await fetch("/api/customers"); //fetch함수 default 값이 get 방식임
     const body = await response.json();
     return body;
   };
