@@ -5,7 +5,9 @@ let html = "";
 
 async function getHtml() {
   try {
-    return await axios.get("https://www.kpx.or.kr/");
+    return await axios.get(
+      "http://ncov.mohw.go.kr/bdBoardList_Real.do?brdId=1&brdGubun=11&ncvContSeq=&contSeq=&board_id=&gubun="
+    );
   } catch (error) {
     console.error(error);
   }
@@ -18,31 +20,13 @@ async function getSmp() {
 
   const $ = cheerio.load(html.data);
   let smp = {};
-  $("#m_contents .m_cont_lf .y_forecast_elec table")
-    .find("tr")
+  $("#content .caseTable .ca_body li")
+    .first("dl")
     .each(function (index, elem) {
-      switch ($(this).find("th").text().trim()) {
-        case "거래일":
-          smp["date"] = $(this)
-            .find("td")
-            .text()
-            .replace(/([\t|\n|\s])/gi, "");
-          break;
-        case "최대":
-          smp["max"] = $(this)
-            .find("td")
-            .text()
-            .replace(/([\t|\n|\s])/gi, "");
-          break;
-        case "최소":
-          smp["min"] = $(this)
-            .find("td")
-            .text()
-            .replace(/([\t|\n|\s])/gi, "");
-          break;
-        case "평균":
-          smp["avg"] = $(this)
-            .find("td")
+      switch ($(this).find("dt").text().trim()) {
+        case "누적":
+          smp[`sum`] = $(this)
+            .find("dd")
             .text()
             .replace(/([\t|\n|\s])/gi, "");
           break;
